@@ -18,6 +18,7 @@ INSERT INTO tbl_departamento (nome) VALUES ('Financeiro');
 INSERT INTO tbl_departamento (nome) VALUES ('Marketing');
 INSERT INTO tbl_departamento (nome) VALUES ('Jurídico');
 INSERT INTO tbl_departamento (nome) VALUES ('Recursos Humanos (RH)');
+INSERT INTO tbl_departamento (nome) VALUES ('Riscos');
 
 
 INSERT INTO tbl_colaborador (primeiro_nome, sobrenome, cpf, email, telefone, data_admissao, avatar, sts_integracao, qtd_respondidas, pontuacao, qtd_certas, porc_progresso, porc_acertos, numero_matricula, data_nascimento, id_departamento) VALUES ('João', 'Silva', '123.456.719-00', 'fabianojesus1991@gmail.com', '123456789', '2024-06-18', 'avatar1.png', 'NAO_FEZ', 0, 0, 0, 0.0, 0.0, '96044', '2000-03-12', 3);
