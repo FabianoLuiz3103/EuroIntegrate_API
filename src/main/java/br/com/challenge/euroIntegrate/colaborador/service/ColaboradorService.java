@@ -59,7 +59,7 @@ public class ColaboradorService {
     }
 
     @Transactional(readOnly = true)
-    public DadosVideoSeq dadosVideosSeq(Long id){
+    public DadosAuxVideosNormas dadosVideosSeq(Long id){
         InfosColaboradorTelaVideos colaboradorInfo = colaboradorRepository.findColaboradorInfoById(id)
                 .orElseThrow(() -> new RuntimeException("Colaborador não encontrado!"));
 
@@ -68,7 +68,7 @@ public class ColaboradorService {
         Integer pontuacao = colaboradorInfo.pontuacao();
         Integer qtdRespondidas = colaboradorInfo.qtdRespondidas();
         Integer qtdCertas = colaboradorInfo.qtdCertas();
-        return new DadosVideoSeq(idColaborador, porcProgresso, pontuacao, qtdRespondidas, qtdCertas, respostaService.findAll(idColaborador) );
+        return new DadosAuxVideosNormas(idColaborador, porcProgresso, pontuacao, qtdRespondidas, qtdCertas, respostaService.findAll(idColaborador) );
     }
 
     @Transactional(readOnly = true)

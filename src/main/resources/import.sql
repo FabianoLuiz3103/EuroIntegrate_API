@@ -114,6 +114,11 @@ INSERT INTO tbl_normas (nome, descricao, id_departamento) VALUES ('Norma-2-Marke
 INSERT INTO tbl_normas (nome, descricao, id_departamento) VALUES ('Norma-3-Marketing', 'Essa é descrição da Norma-3-Marketing', 3);
 INSERT INTO tbl_normas (nome, descricao, id_departamento) VALUES ('Norma-4-Marketing', 'Essa é descrição da Norma-4-Marketing', 3);
 INSERT INTO tbl_normas (nome, descricao, id_departamento) VALUES ('Norma-5-Marketing', 'Essa é descrição da Norma-5-Marketing', 3);
+INSERT INTO tbl_normas (nome, descricao, id_departamento) VALUES ('Norma-1-Financeiro', 'Essa é descrição da Norma-1-Financeiro', 2);
+INSERT INTO tbl_normas (nome, descricao, id_departamento) VALUES ('Norma-2-Financeiro', 'Essa é descrição da Norma-2-Financeiro', 2);
+INSERT INTO tbl_normas (nome, descricao, id_departamento) VALUES ('Norma-3-Financeiro', 'Essa é descrição da Norma-3-Financeiro', 2);
+INSERT INTO tbl_normas (nome, descricao, id_departamento) VALUES ('Norma-4-Financeiro', 'Essa é descrição da Norma-4-Financeiro', 2);
+INSERT INTO tbl_normas (nome, descricao, id_departamento) VALUES ('Norma-5-Financeiro', 'Essa é descrição da Norma-5-Financeiro', 2);
 INSERT INTO tbl_normas (nome, descricao) VALUES ('Norma-1-Geral', 'Essa é descrição da Norma-1-Geral');
 INSERT INTO tbl_normas (nome, descricao) VALUES ('Norma-2-Geral', 'Essa é descrição da Norma-1-Geral');
 INSERT INTO tbl_normas (nome, descricao) VALUES ('Norma-3-Geral', 'Essa é descrição da Norma-1-Geral');

@@ -2,7 +2,7 @@ package br.com.challenge.euroIntegrate.colaborador.dto;
 
 import java.util.List;
 
-public record DadosVideoSeq(
+public record DadosAuxVideosNormas(
         Long idColaborador,
         Double porcProgresso,
         Integer pontuacao,

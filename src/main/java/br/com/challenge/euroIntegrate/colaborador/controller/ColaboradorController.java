@@ -1,7 +1,6 @@
 package br.com.challenge.euroIntegrate.colaborador.controller;
 
 import br.com.challenge.euroIntegrate.colaborador.dto.*;
-import br.com.challenge.euroIntegrate.colaborador.model.Normas;
 import br.com.challenge.euroIntegrate.colaborador.service.ColaboradorService;
 import br.com.challenge.euroIntegrate.colaborador.service.RespostaService;
 import jakarta.validation.Valid;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,7 +49,7 @@ public class ColaboradorController {
     }
     @GetMapping("/videos-seq/{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<DadosVideoSeq> telaVideosSeq(@PathVariable Long id) {
+    public ResponseEntity<DadosAuxVideosNormas> telaVideosSeq(@PathVariable Long id) {
         var dadosSeq = colaboradorService.dadosVideosSeq(id);
         return new ResponseEntity<>(dadosSeq, HttpStatus.OK);
 
