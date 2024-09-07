@@ -47,24 +47,24 @@ public class ColaboradorController {
         return new ResponseEntity<>(videosComPerguntas, HttpStatus.OK);
 
     }
-    @GetMapping("/videos-seq/{id}")
+    @GetMapping("/dados-aux/{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<DadosAuxVideosNormas> telaVideosSeq(@PathVariable Long id) {
-        var dadosSeq = colaboradorService.dadosVideosSeq(id);
+    public ResponseEntity<DadosAuxVideosNormas> dadosAuxVideosNormas(@PathVariable Long id) {
+        var dadosSeq = colaboradorService.dadosAuxTelaVideosNormas(id);
         return new ResponseEntity<>(dadosSeq, HttpStatus.OK);
 
     }
 
     @GetMapping("/normas-departamento/{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<DadosNormas>> telaNormasDepartamento(@PathVariable Long id){
+    public ResponseEntity<List<DadosTelaNormas>> telaNormasDepartamento(@PathVariable Long id){
         var normasComPerguntas = colaboradorService.carregarNormasComPerguntasDept(id);
         return new ResponseEntity<>(normasComPerguntas, HttpStatus.OK);
     }
 
     @GetMapping("/normas-gerais")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<DadosNormas>> telaNormasGerais(){
+    public ResponseEntity<List<DadosTelaNormas>> telaNormasGerais(){
         var normasComPerguntas = colaboradorService.carregarNormasComPerguntasGeral();
         return new ResponseEntity<>(normasComPerguntas, HttpStatus.OK);
     }

@@ -1,6 +1,12 @@
 package br.com.challenge.euroIntegrate.administrador.service;
 
+import br.com.challenge.euroIntegrate.administrador.dto.DadosCadastroColaboradores;
+import br.com.challenge.euroIntegrate.administrador.dto.DadosDetalhamentoCadastroColaboradores;
+import br.com.challenge.euroIntegrate.administrador.dto.DadosFileCadastroColaborador;
+import br.com.challenge.euroIntegrate.administrador.dto.DadosValidarColaboradores;
 import br.com.challenge.euroIntegrate.administrador.repository.ColaboradorRhRepository;
+import br.com.challenge.euroIntegrate.colaborador.dto.DadosDetalhamentoColaborador;
+import br.com.challenge.euroIntegrate.colaborador.model.Colaborador;
 import br.com.challenge.euroIntegrate.colaborador.repository.ColaboradorRepository;
 import br.com.challenge.euroIntegrate.integracao.dto.DadosCadastroIntegracao;
 import br.com.challenge.euroIntegrate.integracao.dto.DadosDetalhamentoIntegracao;
@@ -31,6 +37,19 @@ public class ColaboradorRhService {
 
     @Autowired
     ColaboradorRhRepository colaboradorRhRepository;
+
+
+    @Transactional
+    public List<DadosDetalhamentoCadastroColaboradores> cadastrarColaborador(List<DadosCadastroColaboradores> dados){
+        var colaboradores = dados.stream().map(Colaborador::new).toList();
+        colaboradorRepository.saveAll(colaboradores);
+        return colaboradores.stream().map(DadosDetalhamentoCadastroColaboradores::new).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+ public List<DadosValidarColaboradores> colaboradores(){
+        return colaboradorRepository.findAll().stream().map(DadosValidarColaboradores::new).collect(Collectors.toList());
+ }
 
 
     @Transactional

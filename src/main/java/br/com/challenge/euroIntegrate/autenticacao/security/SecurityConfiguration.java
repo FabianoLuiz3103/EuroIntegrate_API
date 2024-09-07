@@ -51,7 +51,7 @@ public class SecurityConfiguration {
             "colaboradores/normas-departamento/**",
             "colaboradores/normas-gerais",
             "colaboradores/resposta",
-            "colaboradores/videos-seq/**",
+            "colaboradores/dados-aux/**",
             "colaboradores/atualizar/**",
 
     };
@@ -60,7 +60,9 @@ public class SecurityConfiguration {
     public static final String [] ENDPOINTS_ADMIN = {
             "/users/test/administrator",
             "/rh/cadastrar-integracao",
-            "/rh/listar-integracoes"
+            "/rh/listar-integracoe",
+            "rh/cadastrar-colaboradores",
+            "rh/listar-colaboradores"
 
     };
 
@@ -87,7 +89,7 @@ public class SecurityConfiguration {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:59087")); // Substitua pelo URL do Flutter
+        configuration.setAllowedOriginPatterns(List.of("*")); // Substitua pelo URL do Flutter
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

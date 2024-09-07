@@ -1,5 +1,6 @@
 package br.com.challenge.euroIntegrate.colaborador.model;
 
+import br.com.challenge.euroIntegrate.administrador.dto.DadosCadastroColaboradores;
 import br.com.challenge.euroIntegrate.administrador.model.ColaboradorRh;
 import br.com.challenge.euroIntegrate.colaborador.dto.DadosAtualizacaoAvatar;
 import br.com.challenge.euroIntegrate.colaborador.dto.DadosResponseVideos;
@@ -33,7 +34,7 @@ public class Colaborador {
     @Column(unique = true)
     private String telefone;
     private LocalDate dataAdmissao;
-    @Column(length = 500)
+    @Column(length = 800)
     private String avatar;
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -56,6 +57,26 @@ public class Colaborador {
     @OneToOne(mappedBy = "colaborador")
     private ColaboradorRh colaboradorRh;
 
+
+    public Colaborador(DadosCadastroColaboradores dados){
+        this.primeiroNome = dados.nome();
+        this.sobrenome = dados.sobrenome();
+        this.cpf = dados.cpf();
+        this.email = dados.email();
+        this.telefone = dados.telefone();
+        this.dataAdmissao = dados.dataAdmissao();
+        this.dataNascimento = dados.dataNascimento();
+        this.numeroMatricula = dados.matricula();
+        this.departamento = new Departamento(dados.departamento());
+        this.colaboradorRh = new ColaboradorRh(dados.colaboradorRh());
+        this.avatar = "{\"HairStyle\":\"Bald\",\"HairColor\":\"Auburn\",\"FacialHairType\":\"Nothing\",\"FacialHairColor\":\"Auburn\",\"EyeType\":\"Close\",\"EyebrowType\":\"Angry\",\"Nose\":\"Default\",\"MouthType\":\"Concerned\",\"SkinColor\":\"Tanned\",\"OutfitType\":\"BlazerTShirt\",\"OutfitColor\":\"Black\",\"Accessory\":\"Nothing\",\"Background\":\"Transparent\"}";
+        this.stsIntegracao = Status.NAO_FEZ;
+        this.pontuacao = 0;
+        this.qtdRespondidas = 0;
+        this.qtdCertas = 0;
+        this.porcProgresso = 0.0;
+        this.porcAcertos = 0.0;
+    }
 
     public void atualizarAvatar(DadosAtualizacaoAvatar dados){
         if(dados.avatar() != null){

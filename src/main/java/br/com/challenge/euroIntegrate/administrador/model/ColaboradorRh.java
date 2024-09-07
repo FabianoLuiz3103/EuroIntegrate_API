@@ -1,5 +1,6 @@
 package br.com.challenge.euroIntegrate.administrador.model;
 
+import br.com.challenge.euroIntegrate.administrador.dto.DadosColaboradorRh;
 import br.com.challenge.euroIntegrate.colaborador.model.Colaborador;
 import br.com.challenge.euroIntegrate.integracao.model.Integracao;
 import jakarta.persistence.*;
@@ -28,4 +29,10 @@ public class ColaboradorRh {
 
     @OneToMany(mappedBy = "colaboradorRh")
     private List<Integracao> integracoes = new ArrayList<>();
+
+
+    public ColaboradorRh(DadosColaboradorRh dados){
+        this.id = dados.id();
+        this.emailRh = dados.email();
+    }
 }

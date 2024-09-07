@@ -7,16 +7,14 @@ import java.util.List;
 public record DadosNormas(
         Long id,
         String nome,
-        String descricao,
-        List<DadosPerguntas> perguntas
+        String descricao
 ) {
 
-    public DadosNormas(Normas norma, List<DadosPerguntas> perguntas){
+    public DadosNormas(Normas norma){
         this(
                 norma.getId(),
                 norma.getNome(),
-                norma.getDescricao(),
-                perguntas
+                norma.getDescricao()
         );
     }
 }

@@ -59,7 +59,7 @@ public class ColaboradorService {
     }
 
     @Transactional(readOnly = true)
-    public DadosAuxVideosNormas dadosVideosSeq(Long id){
+    public DadosAuxVideosNormas dadosAuxTelaVideosNormas(Long id){
         InfosColaboradorTelaVideos colaboradorInfo = colaboradorRepository.findColaboradorInfoById(id)
                 .orElseThrow(() -> new RuntimeException("Colaborador não encontrado!"));
 
@@ -93,7 +93,7 @@ public class ColaboradorService {
     }
 
     @Transactional(readOnly = true)
-    public List<DadosNormas> carregarNormasComPerguntasDept(Long id) {
+    public List<DadosTelaNormas> carregarNormasComPerguntasDept(Long id) {
         Long idDept = colaboradorRepository.findDepartamentoIdById(id).orElseThrow(
                 ()-> new RuntimeException("Colaborador não encontrado!"));
         var normas = normasRepository.findAllByDepartamentoIdWithPerguntasAndOpcoes(idDept);
@@ -101,12 +101,12 @@ public class ColaboradorService {
     }
 
     @Transactional(readOnly = true)
-    public List<DadosNormas> carregarNormasComPerguntasGeral() {
+    public List<DadosTelaNormas> carregarNormasComPerguntasGeral() {
         var normas = normasRepository.findAllByDepartamentoIdIsNull();
         return perguntasNormas(normas);
     }
 
-    private List<DadosNormas> perguntasNormas(List<Normas> normas){
+    private List<DadosTelaNormas> perguntasNormas(List<Normas> normas){
         return normas.stream()
                 .map(
                         norma -> {
@@ -118,7 +118,7 @@ public class ColaboradorService {
                                         return new DadosPerguntas(pergunta, opcoes);
                                     })
                                     .toList();
-                            return new DadosNormas(norma, perguntas);
+                            return new DadosTelaNormas(new DadosNormas(norma), perguntas);
                         }
                 ).toList();
     }

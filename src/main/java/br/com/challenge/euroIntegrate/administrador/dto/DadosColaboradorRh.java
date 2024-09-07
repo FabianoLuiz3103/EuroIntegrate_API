@@ -6,14 +6,13 @@ import br.com.challenge.euroIntegrate.colaborador.dto.DadosColaboradorPapelRh;
 public record DadosColaboradorRh(
 
         Long id,
-        String email,
-        DadosColaboradorPapelRh dadosColaboradorPapelRh
+        String email
+
 ) {
-    public DadosColaboradorRh(ColaboradorRh colaboradorRh){
-        this(
-                colaboradorRh.getId(),
-                colaboradorRh.getEmailRh(),
-                new DadosColaboradorPapelRh(colaboradorRh.getColaborador())
-                );
+
+    public DadosColaboradorRh(ColaboradorRh dados){
+        this(dados.getId(),
+                dados.getEmailRh());
     }
+
 }

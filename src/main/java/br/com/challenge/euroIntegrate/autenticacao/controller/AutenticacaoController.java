@@ -21,9 +21,8 @@ public class AutenticacaoController {
     private ColaboradorService colaboradorService;
 
     @PostMapping("/login")
-    public ResponseEntity<TokenDatails> autenticarUsuario(@RequestBody LoginDTO login){
+    public ResponseEntity<TokenDTO> autenticarUsuario(@RequestBody LoginDTO login){
         var token = autenticacaoService.autenticarUsuario(login);
-        var idColaborador = colaboradorService.getIdColaborador(login.email());
-        return new ResponseEntity<>(new TokenDatails(token, idColaborador), HttpStatus.OK);
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
 }
