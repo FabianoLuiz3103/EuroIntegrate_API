@@ -2,6 +2,7 @@ package br.com.challenge.euroIntegrate.administrador.controller;
 
 import br.com.challenge.euroIntegrate.administrador.dto.DadosCadastroColaboradores;
 import br.com.challenge.euroIntegrate.administrador.dto.DadosDetalhamentoCadastroColaboradores;
+import br.com.challenge.euroIntegrate.administrador.dto.DadosHomeAdmin;
 import br.com.challenge.euroIntegrate.administrador.dto.DadosValidarColaboradores;
 import br.com.challenge.euroIntegrate.administrador.service.ColaboradorRhService;
 import br.com.challenge.euroIntegrate.colaborador.dto.DadosDepartamento;
@@ -69,6 +70,15 @@ public class ColaboradorRhController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<DadosListagemIntegracao>> listarIntegracoes(){
         return new ResponseEntity<>(colaboradorRhService.listar(), HttpStatus.OK);
+    }
+
+
+    @GetMapping("/tela-home-admin/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<DadosHomeAdmin> homeAdmin(@PathVariable Long id, Authentication authentication){
+        var email = authentication.getName();
+        var dados = colaboradorRhService.telaHomeAdmin(id, email);
+        return ResponseEntity.ok(dados);
     }
 
 

@@ -18,6 +18,10 @@ public interface ColaboradorRepository extends JpaRepository<Colaborador, Long> 
 
     @Query("SELECT id FROM Colaborador WHERE email = :email")
     Optional<Long> findIdByEmail(@Param("email") String email);
+
+    @Query("SELECT primeiroNome FROM Colaborador WHERE email = :email")
+    Optional<String> findNomeByEmail(@Param("email") String email);
+
     @Query("SELECT c.departamento.id FROM Colaborador c WHERE c.id = :id")
     Optional<Long> findDepartamentoIdById(@Param("id") Long id);
 
@@ -37,5 +41,8 @@ public interface ColaboradorRepository extends JpaRepository<Colaborador, Long> 
     @Query("UPDATE Colaborador c SET c.stsIntegracao = :status WHERE c.integracao.id = :idInt AND c.stsIntegracao = 'NAO_FEZ'")
     void atualizarStatusInicio(@Param("status") Status status, @Param("idInt") Long idInt);
 
+
+    @Query("SELECT COUNT(c) FROM Colaborador c WHERE c.stsIntegracao = :status")
+    int countByStatusFinalizado(@Param("status") Status status);
 
 }

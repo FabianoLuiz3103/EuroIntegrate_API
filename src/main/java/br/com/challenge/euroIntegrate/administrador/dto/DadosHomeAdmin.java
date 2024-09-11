@@ -4,10 +4,10 @@ public record DadosHomeAdmin(
 
         String nomeAdmin,
         //Total de processos criados pelo admin e total geral
-        Integer totalProcessos,
+        Long totalProcessos,
         Integer totalProcessosAdmin,
         Integer totalColaboradoresTreinados,
-        Integer diasDeTreinamento,
+        Long diasDeTreinamento,
         Integer qtdNaoInciado,
         Integer qtdFinalizado,
         Integer qtdAndamento

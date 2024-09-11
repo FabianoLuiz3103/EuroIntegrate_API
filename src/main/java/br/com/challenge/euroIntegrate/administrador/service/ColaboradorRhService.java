@@ -2,6 +2,7 @@ package br.com.challenge.euroIntegrate.administrador.service;
 
 import br.com.challenge.euroIntegrate.administrador.dto.DadosCadastroColaboradores;
 import br.com.challenge.euroIntegrate.administrador.dto.DadosDetalhamentoCadastroColaboradores;
+import br.com.challenge.euroIntegrate.administrador.dto.DadosHomeAdmin;
 import br.com.challenge.euroIntegrate.administrador.dto.DadosValidarColaboradores;
 import br.com.challenge.euroIntegrate.administrador.repository.ColaboradorRhRepository;
 import br.com.challenge.euroIntegrate.colaborador.dto.DadosDepartamento;
@@ -23,8 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.time.temporal.ChronoUnit;
 
 @Service
 public class ColaboradorRhService {
@@ -42,10 +45,56 @@ public class ColaboradorRhService {
     DepartamentoRepository departamentoRepository;
 
 
+    @Transactional(readOnly = true)
+    public DadosHomeAdmin telaHomeAdmin(Long id, String email){
+        var nome = colaboradorRepository.findNomeByEmail(email).orElseThrow(
+                () -> new RuntimeException("Colaborador não encontrado")
+        );
+        var totalIntegra = integracaoRepository.count();
+        var totalIntegraColabRh = integracaoRepository.countIntegracaoByColaboradorRhId(id);
+        var totalTreinados = colaboradorRepository.countByStatusFinalizado(Status.FINALIZADO);
+        var maiorDiaMenorDia = integracaoRepository.findMinMaxDates();
+        var totalDias = calcularDiasTotal(maiorDiaMenorDia);
+        var qtdNaoIniciado = integracaoRepository.countIntegracaoByStatus(Status.NAO_INICIADO);
+        var qtdAndamento = integracaoRepository.countIntegracaoByStatus(Status.FINALIZADO);
+        var qtdFinalizado = integracaoRepository.countIntegracaoByStatus(Status.FINALIZADO);
+
+        return new DadosHomeAdmin(
+                nome,
+                totalIntegra,
+                totalIntegraColabRh,
+                totalTreinados,
+                totalDias,
+                qtdNaoIniciado,
+                qtdAndamento,
+                qtdFinalizado
+        );
+
+    }
+
+    private long calcularDiasTotal(List<LocalDate[]> result) {
+        if (result.isEmpty()) {
+            return 0;
+        }
+
+        LocalDate[] dates = result.get(0);
+        LocalDate minDate = dates[0];
+        LocalDate maxDate = dates[1];
+
+        if (minDate != null && maxDate != null) {
+            return ChronoUnit.DAYS.between(minDate, maxDate);
+        } else {
+            return 0;
+        }
+    }
+
+
+
     @Transactional
     public List<DadosDetalhamentoCadastroColaboradores> cadastrarColaborador(List<DadosCadastroColaboradores> dados){
         var colaboradores = dados.stream().map(Colaborador::new).toList();
         colaboradorRepository.saveAll(colaboradores);
+
         return colaboradores.stream().map(DadosDetalhamentoCadastroColaboradores::new).collect(Collectors.toList());
     }
 
@@ -75,7 +124,7 @@ public class ColaboradorRhService {
 
 
     @Transactional
-    @Scheduled(fixedRate = 1200000) // 2 minutos
+    @Scheduled(fixedRate = 2400000) // 2 minutos
     public void checkDateAndUpdateDatabase() {
         try {
             LocalDateTime now = LocalDateTime.now();

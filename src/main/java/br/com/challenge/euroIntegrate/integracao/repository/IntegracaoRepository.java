@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface IntegracaoRepository extends JpaRepository<Integracao, Long> {
@@ -21,5 +22,15 @@ public interface IntegracaoRepository extends JpaRepository<Integracao, Long> {
 
     @Query("SELECT i.id, i.dataFim, i.horaFim, i.status FROM Integracao i")
     List<Object[]> findDataHoraFimStatus();
+
+    @Query("SELECT COUNT(i) FROM Integracao i WHERE i.colaboradorRh.id = :idRh")
+    int countIntegracaoByColaboradorRhId(@Param("idRh") Long idRh);
+
+    @Query("SELECT MIN(i.dataInicio), MAX(i.dataFim) FROM Integracao i")
+    List<LocalDate[]> findMinMaxDates();
+
+    @Query("SELECT COUNT(i) FROM Integracao i WHERE i.status = :status")
+    int countIntegracaoByStatus(@Param("status") Status status);
+
 
 }

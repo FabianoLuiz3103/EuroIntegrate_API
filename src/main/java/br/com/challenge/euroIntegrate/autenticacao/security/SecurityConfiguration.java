@@ -63,7 +63,8 @@ public class SecurityConfiguration {
             "/rh/listar-integracoes",
             "rh/cadastrar-colaboradores",
             "rh/listar-colaboradores",
-            "rh/listar-departamentos"
+            "rh/listar-departamentos",
+            "rh/tela-home-admin/**"
 
     };
 
