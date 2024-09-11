@@ -76,7 +76,6 @@ public class ColaboradorRhService {
         if (result.isEmpty()) {
             return 0;
         }
-
         LocalDate[] dates = result.get(0);
         LocalDate minDate = dates[0];
         LocalDate maxDate = dates[1];
@@ -124,7 +123,8 @@ public class ColaboradorRhService {
 
 
     @Transactional
-    @Scheduled(fixedRate = 2400000) // 2 minutos
+    //@Scheduled(fixedRate = 2400000) // 2 minutos
+    @Scheduled(fixedRate = 43200000) // 12 horas
     public void checkDateAndUpdateDatabase() {
         try {
             LocalDateTime now = LocalDateTime.now();
