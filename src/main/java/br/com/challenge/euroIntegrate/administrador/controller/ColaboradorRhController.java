@@ -4,6 +4,7 @@ import br.com.challenge.euroIntegrate.administrador.dto.DadosCadastroColaborador
 import br.com.challenge.euroIntegrate.administrador.dto.DadosDetalhamentoCadastroColaboradores;
 import br.com.challenge.euroIntegrate.administrador.dto.DadosValidarColaboradores;
 import br.com.challenge.euroIntegrate.administrador.service.ColaboradorRhService;
+import br.com.challenge.euroIntegrate.colaborador.dto.DadosDepartamento;
 import br.com.challenge.euroIntegrate.integracao.dto.DadosCadastroIntegracao;
 import br.com.challenge.euroIntegrate.integracao.dto.DadosDetalhamentoIntegracao;
 import br.com.challenge.euroIntegrate.integracao.dto.DadosListagemIntegracao;
@@ -11,6 +12,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -27,6 +29,7 @@ public class ColaboradorRhController {
 
 
     @PostMapping("cadastrar-colaboradores")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<DadosDetalhamentoCadastroColaboradores>> cadastrarColaboradores(
          @RequestBody @Valid List<DadosCadastroColaboradores> dados, UriComponentsBuilder uriBuilder){
         var colaboradores = colaboradorRhService.cadastrarColaborador(dados);
@@ -35,29 +38,37 @@ public class ColaboradorRhController {
     }
 
     @GetMapping("listar-colaboradores")
-    public ResponseEntity<List<DadosValidarColaboradores>> findAll(){
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<DadosValidarColaboradores>> colaboradores(){
         var colaboradores = colaboradorRhService.colaboradores();
         return ResponseEntity.ok(colaboradores);
     }
 
-    @PostMapping("/cadastrar-integracao")
+    @GetMapping("listar-departamentos")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<DadosDepartamento>> departamentos(){
+        var departamentos = colaboradorRhService.departamentos();
+        return ResponseEntity.ok(departamentos);
+    }
+
+    @PostMapping("/cadastrar-integracao/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<DadosDetalhamentoIntegracao> cadastrarIntegracao(
+            @PathVariable Long id,
                                                                 @RequestBody
                                                                 @Valid
                                                                 DadosCadastroIntegracao dados,
-                                                                UriComponentsBuilder uriBuilder,
-                                                                Authentication authentication){
-        String email = authentication.getName();
-        var dadosD = colaboradorRhService.cadastrar(dados, email);
+                                                                UriComponentsBuilder uriBuilder){
+        var dadosD = colaboradorRhService.cadastrar(dados, id);
         var uri = uriBuilder.path("/rh/integracao/{id}").buildAndExpand(dadosD.id()).toUri();
         return ResponseEntity.created(uri).body(dadosD);
 
     }
 
     @GetMapping("/listar-integracoes")
-    public ResponseEntity<List<DadosListagemIntegracao>> listarIntegracoes( Authentication authentication){
-        String email = authentication.getName();
-        return new ResponseEntity<>(colaboradorRhService.listar(email), HttpStatus.OK);
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<DadosListagemIntegracao>> listarIntegracoes(){
+        return new ResponseEntity<>(colaboradorRhService.listar(), HttpStatus.OK);
     }
 
 

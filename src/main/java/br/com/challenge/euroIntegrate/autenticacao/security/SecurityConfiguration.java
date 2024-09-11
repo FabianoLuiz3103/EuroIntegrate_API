@@ -59,10 +59,11 @@ public class SecurityConfiguration {
     // Endpoints que só podem ser acessador por usuários com permissão de administrador
     public static final String [] ENDPOINTS_ADMIN = {
             "/users/test/administrator",
-            "/rh/cadastrar-integracao",
-            "/rh/listar-integracoe",
+            "/rh/cadastrar-integracao/**",
+            "/rh/listar-integracoes",
             "rh/cadastrar-colaboradores",
-            "rh/listar-colaboradores"
+            "rh/listar-colaboradores",
+            "rh/listar-departamentos"
 
     };
 

@@ -57,9 +57,11 @@ public class Integracao {
 
 
     public Integracao(DadosCadastroIntegracao dados, Integer qtdColaboradores, ColaboradorRh colaboradorRh){
-        this.status = Status.ANDAMENTO;
+        this.status = Status.NAO_INICIADO;
         this.dataInicio = dados.dataInicio();
+        this.horaInicio = dados.horaInicio();
         this.dataFim = dados.dataFim();
+        this.horaFim = dados.horaFim();
         this.qtdColaboradores = qtdColaboradores;
         this.mediaAcertos = 0.0;
         this.mediaProgresso = 0.0;

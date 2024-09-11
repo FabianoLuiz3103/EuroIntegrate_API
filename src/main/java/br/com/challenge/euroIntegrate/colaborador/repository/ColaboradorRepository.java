@@ -26,7 +26,7 @@ public interface ColaboradorRepository extends JpaRepository<Colaborador, Long> 
     Optional<InfosColaboradorTelaVideos> findColaboradorInfoById(@Param("id") Long id);
 
 
-    @Query("SELECT COUNT(c) FROM Colaborador c WHERE c.departamento.id = :idDept AND c.stsIntegracao = 'NAO_FEZ'")
+    @Query("SELECT COUNT(c) FROM Colaborador c WHERE c.departamento.id = :idDept AND c.stsIntegracao = 'NAO_FEZ' AND c.integracao IS NULL")
     int countByDepartamentoIdAndStatus(@Param("idDept") Long idDept);
 
     @Modifying

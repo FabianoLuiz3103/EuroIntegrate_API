@@ -16,7 +16,10 @@ public interface IntegracaoRepository extends JpaRepository<Integracao, Long> {
     @Query("UPDATE Integracao i SET i.status = :status WHERE i.id = :idInt")
     void atualizarStatusInicio(@Param("status") Status status, @Param("idInt") Long idInt);
 
-    @Query("SELECT i.id, i.dataInicio, i.horaInicio FROM Integracao i WHERE i.status = 'NAO_INICIADO'")
-    List<Object[]> findDataHoraInicioByStatusNaoFez();
+    @Query("SELECT i.id, i.dataInicio, i.horaInicio, i.status FROM Integracao i WHERE i.status = 'NAO_INICIADO'")
+    List<Object[]> findDataHoraInicioByStatusNaoIniciado();
+
+    @Query("SELECT i.id, i.dataFim, i.horaFim, i.status FROM Integracao i")
+    List<Object[]> findDataHoraFimStatus();
 
 }
