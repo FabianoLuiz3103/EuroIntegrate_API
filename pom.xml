@@ -112,6 +112,36 @@
 					</excludes>
 				</configuration>
 			</plugin>
+
+
+			<plugin>
+				<groupId>com.microsoft.azure</groupId>
+				<artifactId>azure-webapp-maven-plugin</artifactId>
+				<version>2.11.0</version>
+				<configuration>
+					<subscriptionId>38cac452-9113-4184-993e-0ebc6462a5c4</subscriptionId>
+					<resourceGroup>EuroIntegrate</resourceGroup>
+					<appName>eurointegrateapi</appName>
+					<pricingTier>F1</pricingTier>
+					<region>East US</region>
+					<runtime>
+						<os>Windows</os>
+						<webContainer>Java SE</webContainer>
+						<javaVersion>Java 17</javaVersion>
+					</runtime>
+					<deployment>
+						<resources>
+							<resource>
+								<type>jar</type>
+								<directory>${project.basedir}/target</directory>
+								<includes>
+									<include>*.jar</include>
+								</includes>
+							</resource>
+						</resources>
+					</deployment>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
