@@ -23,7 +23,7 @@ jobs:
           distribution: 'microsoft'
 
       - name: Build with Maven
-        run: mvn clean instal
+        run: mvn clean install
         env:
           DATASOURCE_URL: ${{ secrets.DATASOURCE_URL }}
           DATASOURCE_USERNAME: ${{ secrets.DATASOURCE_USERNAME }}
@@ -56,7 +56,7 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_C727867AC7C84E00AC6A42E1CA373D26 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_B0B9B9C25515442DAE3D56AE59A559C1 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C995E229112F48F1B750DA94C450C524 }}
-
+          
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
