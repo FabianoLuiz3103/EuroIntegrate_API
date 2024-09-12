@@ -8,7 +8,7 @@ public record DadosHomeAdmin(
         Integer totalProcessosAdmin,
         Integer totalColaboradoresTreinados,
         Long diasDeTreinamento,
-        Integer qtdNaoInciado,
+        Integer qtdNaoIniciado,
         Integer qtdFinalizado,
         Integer qtdAndamento
 

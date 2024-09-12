@@ -1,0 +1,21 @@
+CREATE TABLE tbl_colaborador (
+    data_admissao DATE,
+    data_nascimento DATE,
+    pontuacao INTEGER,
+    porc_acertos FLOAT(53),
+    porc_progresso FLOAT(53),
+    qtd_certas INTEGER,
+    qtd_respondidas INTEGER,
+    id BIGINT AUTO_INCREMENT,
+    id_departamento BIGINT NOT NULL,
+    id_integracao BIGINT,
+    avatar VARCHAR(800),
+    cpf VARCHAR(255) UNIQUE,
+    email VARCHAR(255) UNIQUE,
+    numero_matricula VARCHAR(255),
+    primeiro_nome VARCHAR(255),
+    sobrenome VARCHAR(255),
+    telefone VARCHAR(255) UNIQUE,
+    sts_integracao ENUM ('ANDAMENTO', 'FINALIZADO', 'NAO_FEZ', 'NAO_INICIADO') NOT NULL,
+    PRIMARY KEY (id)
+);

@@ -38,7 +38,7 @@ public interface ColaboradorRepository extends JpaRepository<Colaborador, Long> 
     void updateIntegracaoByDepartamentoId(@Param("integracao") Integracao integracao, @Param("status") Status status, @Param("idDept") Long idDept);
 
     @Modifying
-    @Query("UPDATE Colaborador c SET c.stsIntegracao = :status WHERE c.integracao.id = :idInt AND c.stsIntegracao = 'NAO_FEZ'")
+    @Query("UPDATE Colaborador c SET c.stsIntegracao = :status WHERE c.integracao.id = :idInt")
     void atualizarStatusInicio(@Param("status") Status status, @Param("idInt") Long idInt);
 
 

@@ -56,7 +56,7 @@ public class ColaboradorRhService {
         var maiorDiaMenorDia = integracaoRepository.findMinMaxDates();
         var totalDias = calcularDiasTotal(maiorDiaMenorDia);
         var qtdNaoIniciado = integracaoRepository.countIntegracaoByStatus(Status.NAO_INICIADO);
-        var qtdAndamento = integracaoRepository.countIntegracaoByStatus(Status.FINALIZADO);
+        var qtdAndamento = integracaoRepository.countIntegracaoByStatus(Status.ANDAMENTO);
         var qtdFinalizado = integracaoRepository.countIntegracaoByStatus(Status.FINALIZADO);
 
         return new DadosHomeAdmin(
@@ -66,8 +66,9 @@ public class ColaboradorRhService {
                 totalTreinados,
                 totalDias,
                 qtdNaoIniciado,
-                qtdAndamento,
-                qtdFinalizado
+                qtdFinalizado,
+                qtdAndamento
+
         );
 
     }
@@ -90,8 +91,14 @@ public class ColaboradorRhService {
 
 
     @Transactional
-    public List<DadosDetalhamentoCadastroColaboradores> cadastrarColaborador(List<DadosCadastroColaboradores> dados){
-        var colaboradores = dados.stream().map(Colaborador::new).toList();
+    public List<DadosDetalhamentoCadastroColaboradores> cadastrarColaborador(List<DadosCadastroColaboradores> dados, Long id){
+        var rh = colaboradorRhRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Colaborador não encontrado!")
+        );
+        var colaboradores = dados.stream()
+                .map(Colaborador::new)
+                .peek(colaborador -> colaborador.setColaboradorRh(rh))
+                .collect(Collectors.toList());
         colaboradorRepository.saveAll(colaboradores);
 
         return colaboradores.stream().map(DadosDetalhamentoCadastroColaboradores::new).collect(Collectors.toList());
@@ -123,81 +130,61 @@ public class ColaboradorRhService {
 
 
     @Transactional
-    //@Scheduled(fixedRate = 2400000) // 2 minutos
+    //@Scheduled(fixedRate = 60000) // 2 minutos
     @Scheduled(fixedRate = 43200000) // 12 horas
     public void checkDateAndUpdateDatabase() {
         try {
             LocalDateTime now = LocalDateTime.now();
             LocalDate today = now.toLocalDate();
 
-            // Buscando as datas de início com status "NAO_INICIADO"
-            List<Object[]> datasHoras = integracaoRepository.findDataHoraInicioByStatusNaoIniciado();
+            List<Object[]> datasHoras = integracaoRepository.findDataHoraInicioDataHoraFim();
 
-            // Buscando as datas de fim e status
-            List<Object[]> datasHorasFim = integracaoRepository.findDataHoraFimStatus();
 
-            System.out.println("Datas de Início Encontradas: " + datasHoras.size());
-
-            // Atualizando o status baseado na data de início
             for (Object[] dataHora : datasHoras) {
                 Long id = (Long) dataHora[0];
                 LocalDate dataInicio = (LocalDate) dataHora[1];
                 LocalTime horaInicio = (LocalTime) dataHora[2];
-                Status status = (Status) dataHora[3];
+                LocalDate dataFim = (LocalDate) dataHora[3];
+                LocalTime horaFim = (LocalTime) dataHora[4];
+                Status status = (Status) dataHora[5];
 
-                // Cria um LocalDateTime com a data de início e a hora de início
+
                 LocalDateTime dataHoraInicio = LocalDateTime.of(dataInicio, horaInicio);
+                LocalDateTime dataHoraFim = LocalDateTime.of(dataFim, horaFim);
 
-                // Verifica e atualiza o status conforme a data atual e a data de início
-                if (today.isEqual(dataInicio)) {
-                    // Atualiza para "ANDAMENTO" se a data de início for igual a hoje
-                    if (!status.name().equals(Status.ANDAMENTO.name())) {
-                        integracaoRepository.atualizarStatusInicio(Status.ANDAMENTO, id);
-                        colaboradorRepository.atualizarStatusInicio(Status.ANDAMENTO, id);
-                    }
-                } else if (today.isBefore(dataInicio)) {
-                    // Atualiza para "NAO_INICIADO" se a data de início for maior que hoje
-                    if (!status.name().equals(Status.NAO_INICIADO.name())) {
+
+                if (now.isBefore(dataHoraInicio)) {
+                    // Status deve ser "NAO_INICIADO"
+                    if (!status.equals(Status.NAO_INICIADO)) {
                         integracaoRepository.atualizarStatusInicio(Status.NAO_INICIADO, id);
                         colaboradorRepository.atualizarStatusInicio(Status.NAO_INICIADO, id);
                     }
-                } else {
-                    // Caso não seja igual ou maior que a data de início, verifica se está dentro do intervalo
-                    LocalDateTime dataHoraFimCompleta = LocalDateTime.of(dataInicio.plusDays(1), LocalTime.MAX);
-
-                    if (now.isAfter(dataHoraInicio) && now.isBefore(dataHoraFimCompleta)) {
-                        if (!status.name().equals(Status.ANDAMENTO.name())) {
-                            integracaoRepository.atualizarStatusInicio(Status.ANDAMENTO, id);
-                            colaboradorRepository.atualizarStatusInicio(Status.ANDAMENTO, id);
-                        }
-                    }
-                }
-            }
-
-            // Atualizando para "FINALIZADO" se a data de fim for anterior a hoje
-            for (Object[] dataHoraFim : datasHorasFim) {
-                Long id = (Long) dataHoraFim[0];
-                LocalDate dataFim = (LocalDate) dataHoraFim[1];
-                LocalTime horaFim = (LocalTime) dataHoraFim[2];
-                Status status = (Status) dataHoraFim[3];
-
-                LocalDateTime dataHoraFimCompleta = LocalDateTime.of(dataFim, horaFim);
-
-                if (today.isAfter(dataHoraFimCompleta.toLocalDate())) {
-                    // Atualiza para "FINALIZADO"
-                    if (!status.name().equals(Status.FINALIZADO.name())) {
+                } else if (now.isAfter(dataHoraFim)) {
+                    // Status deve ser "FINALIZADO"
+                    if (!status.equals(Status.FINALIZADO)) {
                         integracaoRepository.atualizarStatusInicio(Status.FINALIZADO, id);
                         colaboradorRepository.atualizarStatusInicio(Status.FINALIZADO, id);
+                    }
+                } else {
+                    // Status deve ser "ANDAMENTO"
+                    if (!status.equals(Status.ANDAMENTO)) {
+                        integracaoRepository.atualizarStatusInicio(Status.ANDAMENTO, id);
+                        colaboradorRepository.atualizarStatusInicio(Status.ANDAMENTO, id);
                     }
                 }
             }
 
         } catch (DataAccessException ex) {
-            System.err.println("Erro ao acessar o banco de dados: " + ex.getMessage());
+            throw new RuntimeException("Erro ao acessar o BD");
         } catch (Exception ex) {
-            System.err.println("Erro durante a execução do método: " + ex.getMessage());
+            throw new RuntimeException("Erro de execução");
         }
     }
+
+
+
+
+
 
 
 

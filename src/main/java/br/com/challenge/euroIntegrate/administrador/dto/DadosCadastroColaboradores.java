@@ -14,7 +14,6 @@ public record DadosCadastroColaboradores(
         LocalDate dataAdmissao,
         String matricula,
         LocalDate dataNascimento,
-        DadosDepartamento departamento,
-        DadosColaboradorRh colaboradorRh
+        DadosDepartamento departamento
 ) {
 }

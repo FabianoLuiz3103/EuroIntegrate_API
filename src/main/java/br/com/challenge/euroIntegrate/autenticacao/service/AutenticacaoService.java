@@ -37,6 +37,7 @@ public class AutenticacaoService {
                 .map(GrantedAuthority::getAuthority)
                 .orElseThrow(() -> new RuntimeException("Usuário não possui papel"));
         Long id = null;
+
         if(papel.equalsIgnoreCase(RoleName.ROLE_CUSTOMER.name())){
             id = colaboradorRepository.findIdByEmail(usuarioDetails.getUsername()).orElseThrow(
                     () -> new RuntimeException("Colaborador não encontrado!")
@@ -48,7 +49,7 @@ public class AutenticacaoService {
             );
         }
 
-        return new TokenDTO(tokenService.gerarToken(usuarioDetails), id);
+        return new TokenDTO(tokenService.gerarToken(usuarioDetails), id, papel);
 
     }
 

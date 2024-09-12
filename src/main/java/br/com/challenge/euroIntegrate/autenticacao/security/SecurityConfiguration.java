@@ -34,6 +34,7 @@ public class SecurityConfiguration {
     public static final String [] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
             "/users/login", // Url que usaremos para fazer login
             "/h2-console/**",
+            "/webhook"
     };
 
     // Endpoints que requerem autenticação para serem acessados
@@ -61,7 +62,7 @@ public class SecurityConfiguration {
             "/users/test/administrator",
             "/rh/cadastrar-integracao/**",
             "/rh/listar-integracoes",
-            "rh/cadastrar-colaboradores",
+            "rh/cadastrar-colaboradores/**",
             "rh/listar-colaboradores",
             "rh/listar-departamentos",
             "rh/tela-home-admin/**"

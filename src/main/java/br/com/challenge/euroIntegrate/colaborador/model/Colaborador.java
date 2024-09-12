@@ -68,7 +68,6 @@ public class Colaborador {
         this.dataNascimento = dados.dataNascimento();
         this.numeroMatricula = dados.matricula();
         this.departamento = new Departamento(dados.departamento());
-        this.colaboradorRh = new ColaboradorRh(dados.colaboradorRh());
         this.avatar = "{\"HairStyle\":\"Bald\",\"HairColor\":\"Auburn\",\"FacialHairType\":\"Nothing\",\"FacialHairColor\":\"Auburn\",\"EyeType\":\"Close\",\"EyebrowType\":\"Angry\",\"Nose\":\"Default\",\"MouthType\":\"Concerned\",\"SkinColor\":\"Tanned\",\"OutfitType\":\"BlazerTShirt\",\"OutfitColor\":\"Black\",\"Accessory\":\"Nothing\",\"Background\":\"Transparent\"}";
         this.stsIntegracao = Status.NAO_FEZ;
         this.pontuacao = 0;

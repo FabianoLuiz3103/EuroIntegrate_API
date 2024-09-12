@@ -29,11 +29,12 @@ public class ColaboradorRhController {
     ColaboradorRhService colaboradorRhService;
 
 
-    @PostMapping("cadastrar-colaboradores")
+    @PostMapping("cadastrar-colaboradores/{id}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<DadosDetalhamentoCadastroColaboradores>> cadastrarColaboradores(
+            @PathVariable Long id,
          @RequestBody @Valid List<DadosCadastroColaboradores> dados, UriComponentsBuilder uriBuilder){
-        var colaboradores = colaboradorRhService.cadastrarColaborador(dados);
+        var colaboradores = colaboradorRhService.cadastrarColaborador(dados, id);
         URI uri = uriBuilder.path("/colaboradores").build().toUri();
         return ResponseEntity.created(uri).body(colaboradores);
     }

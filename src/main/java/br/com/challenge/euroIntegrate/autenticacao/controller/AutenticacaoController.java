@@ -2,7 +2,6 @@ package br.com.challenge.euroIntegrate.autenticacao.controller;
 
 import br.com.challenge.euroIntegrate.autenticacao.dto.LoginDTO;
 import br.com.challenge.euroIntegrate.autenticacao.dto.TokenDTO;
-import br.com.challenge.euroIntegrate.autenticacao.dto.TokenDatails;
 import br.com.challenge.euroIntegrate.autenticacao.service.AutenticacaoService;
 import br.com.challenge.euroIntegrate.colaborador.service.ColaboradorService;
 import org.springframework.beans.factory.annotation.Autowired;
