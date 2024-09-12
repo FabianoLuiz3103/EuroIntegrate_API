@@ -24,10 +24,6 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean install
-        env:
-          DATASOURCE_URL: ${{ secrets.DATASOURCE_URL }}
-          DATASOURCE_USERNAME: ${{ secrets.DATASOURCE_USERNAME }}
-          DATASOURCE_PASSWORD: ${{ secrets.DATASOURCE_PASSWORD }}
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -53,10 +49,10 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_C727867AC7C84E00AC6A42E1CA373D26 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_B0B9B9C25515442DAE3D56AE59A559C1 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C995E229112F48F1B750DA94C450C524 }}
-          
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_12DD01731B3545C0906E4F362C45F5D4 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_510E3930133C4CE0B7D7218ECD557E41 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_3FD5774EC7CE4877B010CFA17DDA03CD }}
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
