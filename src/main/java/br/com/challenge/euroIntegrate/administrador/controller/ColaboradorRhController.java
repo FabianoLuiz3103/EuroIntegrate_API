@@ -1,9 +1,6 @@
 package br.com.challenge.euroIntegrate.administrador.controller;
 
-import br.com.challenge.euroIntegrate.administrador.dto.DadosCadastroColaboradores;
-import br.com.challenge.euroIntegrate.administrador.dto.DadosDetalhamentoCadastroColaboradores;
-import br.com.challenge.euroIntegrate.administrador.dto.DadosHomeAdmin;
-import br.com.challenge.euroIntegrate.administrador.dto.DadosValidarColaboradores;
+import br.com.challenge.euroIntegrate.administrador.dto.*;
 import br.com.challenge.euroIntegrate.administrador.service.ColaboradorRhService;
 import br.com.challenge.euroIntegrate.colaborador.dto.DadosDepartamento;
 import br.com.challenge.euroIntegrate.integracao.dto.DadosCadastroIntegracao;
@@ -27,6 +24,13 @@ public class ColaboradorRhController {
 
     @Autowired
     ColaboradorRhService colaboradorRhService;
+
+
+    @GetMapping("/dash")
+    public ResponseEntity<List<DadosDash>> dash(){
+        var list = colaboradorRhService.dash();
+        return ResponseEntity.ok(list);
+    }
 
 
     @PostMapping("cadastrar-colaboradores/{id}")

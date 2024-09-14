@@ -30,4 +30,20 @@ public interface IntegracaoRepository extends JpaRepository<Integracao, Long> {
     int countIntegracaoByStatus(@Param("status") Status status);
 
 
+    @Query("SELECT YEAR(i.dataFim) AS ano, MONTH(i.dataFim) AS mes, AVG(i.mediaProgresso) AS mediaProgresso " +
+            "FROM Integracao i GROUP BY YEAR(i.dataFim), MONTH(i.dataFim)")
+    List<Object[]> findAvgProgressMonth();
+
+    @Query("SELECT YEAR(i.dataFim) AS ano, MONTH(i.dataFim) AS mes, AVG(i.mediaAcertos) AS mediaAcertos " +
+            "FROM Integracao i GROUP BY YEAR(i.dataFim), MONTH(i.dataFim)")
+    List<Object[]> findAvgAcertosMonth();
+
+    @Query("SELECT YEAR(i.dataInicio) AS ano, MONTH(i.dataInicio) AS mes, COUNT(i.id) AS quantidade " +
+            "FROM Integracao i GROUP BY YEAR(i.dataInicio), MONTH(i.dataInicio)")
+    List<Object[]> findQuantidadePorMes();
+
+
+
+
+
 }

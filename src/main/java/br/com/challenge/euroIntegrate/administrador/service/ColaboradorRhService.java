@@ -1,9 +1,6 @@
 package br.com.challenge.euroIntegrate.administrador.service;
 
-import br.com.challenge.euroIntegrate.administrador.dto.DadosCadastroColaboradores;
-import br.com.challenge.euroIntegrate.administrador.dto.DadosDetalhamentoCadastroColaboradores;
-import br.com.challenge.euroIntegrate.administrador.dto.DadosHomeAdmin;
-import br.com.challenge.euroIntegrate.administrador.dto.DadosValidarColaboradores;
+import br.com.challenge.euroIntegrate.administrador.dto.*;
 import br.com.challenge.euroIntegrate.administrador.repository.ColaboradorRhRepository;
 import br.com.challenge.euroIntegrate.colaborador.dto.DadosDepartamento;
 import br.com.challenge.euroIntegrate.colaborador.model.Colaborador;
@@ -21,13 +18,15 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
+import java.util.LinkedHashMap;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.time.temporal.ChronoUnit;
+import java.util.stream.IntStream;
 
 @Service
 public class ColaboradorRhService {
@@ -126,6 +125,114 @@ public class ColaboradorRhService {
         colaboradorRepository.updateIntegracaoByDepartamentoId(integracao, Status.NAO_INICIADO, dados.departamento().id());
 
         return new DadosDetalhamentoIntegracao(integracao);
+    }
+
+
+
+
+    @Transactional(readOnly = true)
+    public List<DadosDash> dash() {
+        LocalDate now = LocalDate.now();
+
+        // Obter dados de nascimento e ano da integração
+        Map<Integer, List<Integer>> idadesPorAnoIntegracao = colaboradorRepository.findAllDataNascimentoAndYearIntegracao().stream()
+                .collect(Collectors.groupingBy(
+                        result -> (Integer) result[1],  // Ano da integração
+                        Collectors.mapping(result -> {
+                            // Converter LocalDate para calcular a idade
+                            LocalDate nascimento = (LocalDate) result[0];
+                            // Calcular a idade
+                            return Period.between(nascimento, now).getYears();
+                        }, Collectors.toList())
+                ));
+
+        // Obter dados de quantidade respondida e certa por ano da integração
+        Map<Integer, List<Integer>> respondidasPorAnoIntegracao = colaboradorRepository.findAllQtdRespondidasAndQtdCertasAndYearIntegracao().stream()
+                .collect(Collectors.groupingBy(
+                        result -> (Integer) result[2],  // Ano da integração
+                        Collectors.mapping(result -> (Integer) result[0], Collectors.toList())
+                ));
+
+        Map<Integer, List<Integer>> certasPorAnoIntegracao = colaboradorRepository.findAllQtdRespondidasAndQtdCertasAndYearIntegracao().stream()
+                .collect(Collectors.groupingBy(
+                        result -> (Integer) result[2],  // Ano da integração
+                        Collectors.mapping(result -> (Integer) result[1], Collectors.toList())
+                ));
+
+        // Obter dados de média de progresso por mês e ano
+        Map<Integer, Map<Integer, Double>> mediaProgressoPorAnoMes = integracaoRepository.findAvgProgressMonth().stream()
+                .collect(Collectors.groupingBy(
+                        result -> (Integer) result[0],  // Ano da integração
+                        Collectors.toMap(
+                                result -> (Integer) result[1],  // Mês
+                                result -> (Double) result[2],  // Média de progresso
+                                (existing, replacement) -> replacement  // Em caso de chaves duplicadas, manter o valor mais recente
+                        )
+                ));
+
+        // Obter dados de média de acertos por mês e ano
+        Map<Integer, Map<Integer, Double>> mediaAcertosPorAnoMes = integracaoRepository.findAvgAcertosMonth().stream()
+                .collect(Collectors.groupingBy(
+                        result -> (Integer) result[0],  // Ano da integração
+                        Collectors.toMap(
+                                result -> (Integer) result[1],  // Mês
+                                result -> (Double) result[2],  // Média de acertos
+                                (existing, replacement) -> replacement  // Em caso de chaves duplicadas, manter o valor mais recente
+                        )
+                ));
+
+        // Obter dados de quantidade de processos criados por mês e ano
+        Map<Integer, Map<Integer, Long>> quantidadeProcessosPorAnoMes = integracaoRepository.findQuantidadePorMes().stream()
+                .collect(Collectors.groupingBy(
+                        result -> (Integer) result[0],  // Ano da integração
+                        Collectors.toMap(
+                                result -> (Integer) result[1],  // Mês
+                                result -> (Long) result[2],  // Quantidade de processos
+                                (existing, replacement) -> replacement  // Em caso de chaves duplicadas, manter o valor mais recente
+                        )
+                ));
+
+
+        var departamentos = departamentoRepository.findAll().stream()
+                .map(DadosDepartamento::new).toList();
+        // Criar uma lista de DadosDash para cada ano com os dados consolidados
+        return idadesPorAnoIntegracao.entrySet().stream()
+                .map(entry -> new DadosDash(
+                        List.of(entry.getKey()),
+                        entry.getValue(),  // Lista de idades para o ano
+                        respondidasPorAnoIntegracao.getOrDefault(entry.getKey(), List.of()),  // Lista de respondidas para o ano
+                        certasPorAnoIntegracao.getOrDefault(entry.getKey(), List.of()),  // Lista de certas para o ano
+                        createFullMonthMap(mediaProgressoPorAnoMes.getOrDefault(entry.getKey(), Map.of())),  // Mapa de média de progresso por mês
+                        createFullMonthMap(mediaAcertosPorAnoMes.getOrDefault(entry.getKey(), Map.of())),  // Mapa de média de acertos por mês
+                        createFullMonthMapQuantidadeProcessos(quantidadeProcessosPorAnoMes.getOrDefault(entry.getKey(), Map.of()))
+                ))
+                .collect(Collectors.toList());
+    }
+
+    // Método auxiliar para criar um mapa com todos os meses e preencher com 0.0 se não houver dados
+    private Map<String, Double> createFullMonthMap(Map<Integer, Double> progressoPorMes) {
+        return IntStream.rangeClosed(1, 12)
+                .boxed()
+                .collect(Collectors.toMap(
+                        this::getNomeMes,  // Nome do mês
+                        mes -> progressoPorMes.getOrDefault(mes, 0.0)  // Preenche com 0.0 se o mês não estiver presente
+                ));
+    }
+
+    // Método auxiliar para criar um mapa com todos os meses e preencher com 0 se não houver dados
+    private Map<String, Long> createFullMonthMapQuantidadeProcessos(Map<Integer, Long> processosPorMes) {
+        return IntStream.rangeClosed(1, 12)
+                .boxed()
+                .collect(Collectors.toMap(
+                        this::getNomeMes,  // Nome do mês
+                        mes -> processosPorMes.getOrDefault(mes, 0L)  // Preenche com 0 se o mês não estiver presente
+                ));
+    }
+
+
+    // Método auxiliar para converter o número do mês em nome
+    private String getNomeMes(int mes) {
+        return java.time.Month.of(mes).name();
     }
 
 

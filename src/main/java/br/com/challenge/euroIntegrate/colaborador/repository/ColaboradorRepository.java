@@ -45,4 +45,14 @@ public interface ColaboradorRepository extends JpaRepository<Colaborador, Long> 
     @Query("SELECT COUNT(c) FROM Colaborador c WHERE c.stsIntegracao = :status")
     int countByStatusFinalizado(@Param("status") Status status);
 
+    @Query("SELECT c.dataNascimento, YEAR(i.dataFim) FROM Colaborador c JOIN Integracao i ON c.integracao.id = i.id")
+    List<Object[]> findAllDataNascimentoAndYearIntegracao();
+
+    @Query("SELECT c.qtdRespondidas, c.qtdCertas, YEAR(i.dataFim) FROM Colaborador c JOIN Integracao i ON c.integracao.id = i.id")
+    List<Object[]> findAllQtdRespondidasAndQtdCertasAndYearIntegracao();
+
+
+
+
+
 }
