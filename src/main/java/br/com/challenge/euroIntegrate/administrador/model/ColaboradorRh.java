@@ -21,7 +21,7 @@ public class ColaboradorRh {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String emailRh;
+    private String cpf;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_colaborador", nullable = false)
@@ -33,6 +33,6 @@ public class ColaboradorRh {
 
     public ColaboradorRh(DadosColaboradorRh dados){
         this.id = dados.id();
-        this.emailRh = dados.email();
+        this.cpf = dados.cpf();
     }
 }

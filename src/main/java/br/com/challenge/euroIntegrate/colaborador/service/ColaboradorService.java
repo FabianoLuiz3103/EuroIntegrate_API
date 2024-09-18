@@ -25,8 +25,8 @@ public class ColaboradorService {
     RespostaService respostaService;
 
     @Transactional(readOnly = true)
-    public idColaboradorDTO getIdColaborador(String email){
-        var id = colaboradorRepository.findIdByEmail(email).orElseThrow(
+    public idColaboradorDTO getIdColaborador(String cpf){
+        var id = colaboradorRepository.findIdByCpf(cpf).orElseThrow(
                 () -> new RuntimeException("Colaborador não encontrado!")
         );
         return new idColaboradorDTO(id);

@@ -29,7 +29,7 @@ public class AutenticacaoService {
     private ColaboradorRhRepository colaboradorRhRepository;
 
     public TokenDTO autenticarUsuario(LoginDTO login){
-        var usernamePasswordAutentication = new UsernamePasswordAuthenticationToken(login.email(), login.senha());
+        var usernamePasswordAutentication = new UsernamePasswordAuthenticationToken(login.cpf(), login.senha());
         var authentication = authenticationManager.authenticate(usernamePasswordAutentication);
         var usuarioDetails = (UsuarioDetailsImpl) authentication.getPrincipal();
         var papel = usuarioDetails.getAuthorities().stream()
@@ -39,12 +39,12 @@ public class AutenticacaoService {
         Long id = null;
 
         if(papel.equalsIgnoreCase(RoleName.ROLE_CUSTOMER.name())){
-            id = colaboradorRepository.findIdByEmail(usuarioDetails.getUsername()).orElseThrow(
+            id = colaboradorRepository.findIdByCpf(usuarioDetails.getUsername()).orElseThrow(
                     () -> new RuntimeException("Colaborador não encontrado!")
             );
         }
         if(papel.equalsIgnoreCase(RoleName.ROLE_ADMINISTRATOR.name())){
-            id  = colaboradorRhRepository.findRhIdByEmail(usuarioDetails.getUsername()).orElseThrow(
+            id  = colaboradorRhRepository.findRhIdByCpf(usuarioDetails.getUsername()).orElseThrow(
                     () -> new RuntimeException("Colaborador rh não encontrado!")
             );
         }

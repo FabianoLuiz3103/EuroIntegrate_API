@@ -7,7 +7,7 @@ import java.util.List;
 public record RecuperarUsuarioDTO(
 
         Long id,
-        String email,
+        String cpf,
         List<Role> roles
 ) {
 }

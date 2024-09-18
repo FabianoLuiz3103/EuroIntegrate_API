@@ -45,8 +45,8 @@ public class ColaboradorRhService {
 
 
     @Transactional(readOnly = true)
-    public DadosHomeAdmin telaHomeAdmin(Long id, String email){
-        var nome = colaboradorRepository.findNomeByEmail(email).orElseThrow(
+    public DadosHomeAdmin telaHomeAdmin(Long id, String cpf){
+        var nome = colaboradorRepository.findNomeByCpf(cpf).orElseThrow(
                 () -> new RuntimeException("Colaborador não encontrado")
         );
         var totalIntegra = integracaoRepository.count();

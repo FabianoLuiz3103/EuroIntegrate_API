@@ -16,11 +16,11 @@ import java.util.Optional;
 
 public interface ColaboradorRepository extends JpaRepository<Colaborador, Long> {
 
-    @Query("SELECT id FROM Colaborador WHERE email = :email")
-    Optional<Long> findIdByEmail(@Param("email") String email);
+    @Query("SELECT id FROM Colaborador WHERE cpf = :cpf")
+    Optional<Long> findIdByCpf(@Param("cpf") String cpf);
 
-    @Query("SELECT primeiroNome FROM Colaborador WHERE email = :email")
-    Optional<String> findNomeByEmail(@Param("email") String email);
+    @Query("SELECT primeiroNome FROM Colaborador WHERE cpf = :cpf")
+    Optional<String> findNomeByCpf(@Param("cpf") String cpf);
 
     @Query("SELECT c.departamento.id FROM Colaborador c WHERE c.id = :id")
     Optional<Long> findDepartamentoIdById(@Param("id") Long id);

@@ -33,7 +33,7 @@ public class UsuarioFilter extends OncePerRequestFilter {
             var tokenJWT = recuperarToken(request);
             if(tokenJWT != null){
                 var subject = tokenService.getSubject(tokenJWT);
-                var usuario = usuarioRepository.findByEmail(subject).orElseThrow(()->new RuntimeException("Usuário não encontrado"));
+                var usuario = usuarioRepository.findByCpf(subject).orElseThrow(()->new RuntimeException("Usuário não encontrado >>>" + subject));
                 var usuarioDetails = new UsuarioDetailsImpl(usuario);
                 var authentication = new UsernamePasswordAuthenticationToken(usuarioDetails, null, usuarioDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);

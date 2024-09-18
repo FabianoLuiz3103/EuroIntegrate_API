@@ -18,8 +18,8 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String email;
+    @Column(unique = false)
+    private String cpf;
 
     private String senha;
 

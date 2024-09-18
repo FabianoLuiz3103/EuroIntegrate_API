@@ -8,8 +8,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface ColaboradorRhRepository extends JpaRepository<ColaboradorRh, Long> {
-    Optional<ColaboradorRh> findByEmailRh(String email);
+    Optional<ColaboradorRh> findByCpf(String cpf);
 
-    @Query("SELECT cr.id FROM ColaboradorRh cr WHERE cr.emailRh = :email")
-    Optional<Long> findRhIdByEmail(@Param("email") String email);
+    @Query("SELECT cr.id FROM ColaboradorRh cr WHERE cr.cpf = :cpf")
+    Optional<Long> findRhIdByCpf(@Param("cpf") String cpf);
 }
