@@ -5,6 +5,7 @@ import br.com.challenge.euroIntegrate.colaborador.dto.InfosColaboradorTelaVideos
 import br.com.challenge.euroIntegrate.colaborador.model.Colaborador;
 import br.com.challenge.euroIntegrate.integracao.model.Integracao;
 import br.com.challenge.euroIntegrate.integracao.model.Status;
+import br.com.challenge.euroIntegrate.ranking.dto.DadosRanking;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -19,6 +20,9 @@ public interface ColaboradorRepository extends JpaRepository<Colaborador, Long> 
     @Query("SELECT id FROM Colaborador WHERE cpf = :cpf")
     Optional<Long> findIdByCpf(@Param("cpf") String cpf);
 
+    @Query("SELECT pontuacao FROM Colaborador WHERE id = :id")
+    Optional<Long> findPontuacaoById(@Param("id") Long id);
+
     @Query("SELECT primeiroNome FROM Colaborador WHERE cpf = :cpf")
     Optional<String> findNomeByCpf(@Param("cpf") String cpf);
 
@@ -28,6 +32,12 @@ public interface ColaboradorRepository extends JpaRepository<Colaborador, Long> 
     @Query("SELECT new br.com.challenge.euroIntegrate.colaborador.dto.InfosColaboradorTelaVideos(c.id, c.porcProgresso, c.pontuacao, c.qtdRespondidas, c.qtdCertas) " +
             "FROM Colaborador c WHERE c.id = :id")
     Optional<InfosColaboradorTelaVideos> findColaboradorInfoById(@Param("id") Long id);
+
+    @Query("SELECT new br.com.challenge.euroIntegrate.ranking.dto.DadosRanking(c.avatarSVG, c.primeiroNome, c.sobrenome, c.pontuacao, " +
+            " new br.com.challenge.euroIntegrate.colaborador.dto.DadosDepartamento(c.departamento), c.stsIntegracao, i.dataInicio, i.dataFim) FROM Colaborador c JOIN Integracao i ON c.integracao.id = i.id WHERE c.stsIntegracao = 'ANDAMENTO'")
+    List<DadosRanking> findDadosRanking();
+
+
 
 
     @Query("SELECT COUNT(c) FROM Colaborador c WHERE c.departamento.id = :idDept AND c.stsIntegracao = 'NAO_FEZ' AND c.integracao IS NULL")

@@ -1,5 +1,7 @@
 package br.com.challenge.euroIntegrate.colaborador.controller;
 
+import br.com.challenge.euroIntegrate.administrador.dto.DadosCadastroColaboradores;
+import br.com.challenge.euroIntegrate.administrador.dto.DadosDetalhamentoCadastroColaboradores;
 import br.com.challenge.euroIntegrate.colaborador.dto.*;
 import br.com.challenge.euroIntegrate.colaborador.service.ColaboradorService;
 import br.com.challenge.euroIntegrate.colaborador.service.RespostaService;
@@ -9,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -21,6 +25,20 @@ public class ColaboradorController {
 
     @Autowired
     private RespostaService respostaService;
+
+    @PostMapping("cadastrar")
+    public ResponseEntity<List<DadosDetalhamentoCadastroColaboradores>> cadastrarColaboradores(
+            @RequestBody @Valid List<DadosCadastroTeste> dados, UriComponentsBuilder uriBuilder){
+        var colaboradores = colaboradorService.cadastrarColaborador(dados);
+        URI uri = uriBuilder.path("/colaboradores").build().toUri();
+        return ResponseEntity.created(uri).body(colaboradores);
+    }
+
+    @GetMapping("/conquistas/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<DadosConquistas> telaConquista(@PathVariable Long id) {
+        return new ResponseEntity<>(colaboradorService.conquistas(id), HttpStatus.OK);
+    }
 
     @GetMapping("/home/{id}")
     @PreAuthorize("isAuthenticated()")

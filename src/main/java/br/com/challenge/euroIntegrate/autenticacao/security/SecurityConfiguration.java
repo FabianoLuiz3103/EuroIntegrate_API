@@ -35,7 +35,9 @@ public class SecurityConfiguration {
             "/users/login", // Url que usaremos para fazer login
             "/h2-console/**",
             "/webhook",
-            "/rh/dash"
+            "/rh/dash",
+            "ranking",
+            "colaboradores/cadastrar"
     };
 
     // Endpoints que requerem autenticação para serem acessados
@@ -55,6 +57,7 @@ public class SecurityConfiguration {
             "colaboradores/resposta",
             "colaboradores/dados-aux/**",
             "colaboradores/atualizar/**",
+            "colaboradores/conquistas/**"
 
     };
 

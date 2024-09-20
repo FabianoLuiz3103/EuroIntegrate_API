@@ -1,13 +1,18 @@
 package br.com.challenge.euroIntegrate.colaborador.service;
 
+import br.com.challenge.euroIntegrate.administrador.dto.DadosCadastroColaboradores;
+import br.com.challenge.euroIntegrate.administrador.dto.DadosDetalhamentoCadastroColaboradores;
 import br.com.challenge.euroIntegrate.colaborador.dto.*;
+import br.com.challenge.euroIntegrate.colaborador.model.Colaborador;
 import br.com.challenge.euroIntegrate.colaborador.model.Normas;
 import br.com.challenge.euroIntegrate.colaborador.repository.*;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ColaboradorService {
@@ -23,6 +28,24 @@ public class ColaboradorService {
 
     @Autowired
     RespostaService respostaService;
+
+    @Transactional
+    public List<DadosDetalhamentoCadastroColaboradores> cadastrarColaborador(List<DadosCadastroTeste> dados){
+        var colaboradores = dados.stream()
+                .map(Colaborador::new)
+                .collect(Collectors.toList());
+        colaboradorRepository.saveAll(colaboradores);
+
+        return colaboradores.stream().map(DadosDetalhamentoCadastroColaboradores::new).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public DadosConquistas conquistas(Long id){
+        var pontuacao = colaboradorRepository.findPontuacaoById(id).orElseThrow(
+                () -> new EntityNotFoundException("Não encontrado")
+        );
+        return new DadosConquistas(pontuacao);
+    }
 
     @Transactional(readOnly = true)
     public idColaboradorDTO getIdColaborador(String cpf){
